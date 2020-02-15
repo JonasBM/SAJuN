@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 
 from juapp import forms
 from juapp.forms import HorarioParaBuscaForm, HorarioParaBuscaRawForm
-from juapp.models import Diario, Pagina, HorarioParaBusca, TermoParaBusca, LocalParaBusca
+from juapp.models import (Diario, HorarioParaBusca, LocalParaBusca, Pagina,
+                          TermoParaBusca)
+from juapp.services.bitchoices import BitChoices
 
 
 @login_required
@@ -22,15 +24,31 @@ def local(request, local_id):
     except LocalParaBusca.DoesNotExist:
         raise Http404('Local não existente')
 
-    data={'local_para_busca':local_id}
-    form = HorarioParaBuscaForm(request.POST or None, initial=data)
-    if form.is_valid():
-        form.save()
-        # form.cleaned_data
-    form = HorarioParaBuscaForm(initial=data)
+
+
+    WEEKDAYS = BitChoices((('Seg', 'Segunda'), ('Ter', 'Terça'), ('qua', 'Quarta'),
+                           ('Qui', 'Quinta'), ('Sex', 'Sexta'), ('Sab', 'Sabado'),
+                           ('Dom', 'Domingo')
+                           ))
+
+    print(WEEKDAYS)
+
+    dias_de_semana
+    for k,v in WEEKDAYS:
+        dias_de_semana
+
+    print(WEEKDAYS.Sab)
+    print(WEEKDAYS.get_selected_values(52))
+
+    data = {'local_para_busca': local_id}
+    form_horario = HorarioParaBuscaForm(request.POST or None, initial=data)
+    if form_horario.is_valid():
+        form_horario.save()
+    form_horario = HorarioParaBuscaForm(initial=data)
     context = {
         'local': local,
-        'form':form
+        'form_horario': form_horario
+        # 'weekdays':WEEKDAYS
     }
     return render(request, 'local.html', context=context)
 
@@ -40,7 +58,8 @@ def delete_horario(request, horario_id):
     horario = get_object_or_404(HorarioParaBusca, id=horario_id)
     local_id = horario.local_para_busca.id
     horario.delete()
-    return redirect('local',local_id)
+    return redirect('local', local_id)
+
 
 @login_required
 def indexAAAA(request):

@@ -10,7 +10,7 @@
         <div class="container">
             <div class="row">
                 {% for local in locais %}
-                <div class="col s12 m4 13">
+                <div class="col s12 m6 sl2">
                     <div class="card">
                         {% if local.logo %}
                         <div class="card-image">
@@ -21,7 +21,7 @@
                             <span class="card-title"><strong>{{local.nome}}</strong></span>
                             <spam><strong>0</strong> novos positivos</small></spam>
                             <blockquote>
-                                <ul class="list-unstyled mt-3 mb-4">
+                                <ul>
                                     {% for termo in local.termos_para_busca.all %}
                                     <li>
                                         <strong>
