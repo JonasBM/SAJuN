@@ -15,7 +15,7 @@ from juapp.models import Diario, Page
 def getLinks(url_str):
     # html_page = urllib3.request.urlopen(url)
 
-    data = {'passo': 1, 'mes': 1, 'ano':2020, 'enviar':None}
+    data = {'passo': 1, 'mes': 2, 'ano':2020, 'enviar':None}
     data = parse.urlencode(data).encode()
     req = request.Request(url_str, data=data)
 

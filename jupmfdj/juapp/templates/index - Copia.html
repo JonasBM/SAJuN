@@ -1,0 +1,35 @@
+<!doctype html>
+
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <meta name="author" content="Kenchikuka">
+    <meta name="description" content="Buscas de Diarios Oficiais">
+    <!-- link rel="stylesheet" href="css/styles.css?v=1.0" -->
+    {% block title %}<title>Buscas</title>{% endblock %}
+</head>
+
+<body>
+<!-- script src="js/scripts.js"></script -->
+<header class="container center-align">
+    <h1>TraversyMedia Blog</h1>
+</header>
+
+<h1>TESTE</h1>
+
+  {% block sidebar %}<!-- insert default navigation text for every page -->{% endblock %}
+  {% block content %}<!-- default content text (typically empty) -->{% endblock %}
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+    <br>
+
+    <a style="display:block" class="center-align" href="/admin">Admin Login</a>
+</div>
+
+</body>
+</html>

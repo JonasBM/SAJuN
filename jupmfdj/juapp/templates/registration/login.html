@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="container row valign-wrapper">
+    <div class="col s12">
+        {% if form.errors %}
+        <p>Usuario ou password não encontrado.
+            <br>Por favor, tente novamente.</p>
+        {% endif %}
+        {% if next %}
+        {% if user.is_authenticated %}
+        <p>Usuario sem permissão.</p>
+        {% else %}
+        <!--    <p>Usuario não logado.</p>-->
+        {% endif %}
+        {% endif %}
+            <form method="post" action="{% url 'login' %}" class="col s3">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="input-field">
+                        <h5>Please sign in</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field">
+                        <input id="inputUsername" type="text" class="validate" name="username" required autofocus>
+                        <label for="inputUsername">{{ form.username.label_tag }}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field">
+                        <input id="inputPassword" type="password" class="validate" name="password" required>
+                        <label for="inputPassword">{{ form.password.label_tag }}</label>
+                    </div>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit" name="action">Entrar
+                    <i class="material-icons right">send</i>
+                </button>
+                <input type="hidden" name="next" value="{{ next }}"/>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

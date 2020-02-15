@@ -1,0 +1,40 @@
+main {
+    flex: 1 0 auto;
+}
+
+body{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.nav-wrapper {
+    padding:0px 10px;
+}
+
+.page-footer{
+    padding-top: 0px;
+}
+
+.d-flex {
+  display: inline-flex;
+}
+
+.card{
+    padding: 5px;
+  transition: .5s;
+
+}
+
+.card:hover i{
+  color: #eee;
+}
+
+.card:hover{
+  transform: scale(1.03);
+}
+
+.display-card {
+  border: solid 1px #333;
+
+ }
