@@ -1,8 +1,7 @@
 from django.contrib import admin
-from juapp.models import Diario, Pagina, HorarioParaBusca, TermoParaBusca, LocalParaBusca
+from juapp.models import Diario, Pagina, TermoParaBusca, LocalParaBusca
 
 admin.site.register(LocalParaBusca)
-admin.site.register(HorarioParaBusca)
 admin.site.register(TermoParaBusca)
 admin.site.register(Diario)
 admin.site.register(Pagina)

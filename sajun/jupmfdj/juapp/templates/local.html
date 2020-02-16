@@ -17,67 +17,8 @@
                 <li>LISTA DE PAGINAS POR TERMO</li>
             </lu>
         </div>
-        <div class="col s3 card-panel" style="padding:10px 5px;">
-            <div class="col s12 center-align">
-                <h5>Horários</h5>
-            </div>
-            {% for horario in local.horarios_para_busca.all %}
-            <div class="col s12" style="padding:5px;">
-                <spam class="inline">
-                    {{horario.horario}}
-                </spam>
-                <a role="button" class="btn-floating btn-small waves-effect waves-light modal-trigger"
-                    data-id="{{horario.id}}" data-horario="{{horario.horario}}" data-toggle="modal"
-                    data-target="modal1">
-                    <i class="material-icons">clear</i>
-                </a>
-            </div>
-            {% endfor %}
-            <div class="row">
-                <div class="col s12">
-                    <form method="post">
-                        {% csrf_token %}
-                        {% for field in form_horario %}
-                        {% if field.html_name == 'local_para_busca' %}
-                        {{ field.errors }}
-                        {{ field }}
-                        {% if field.help_text %}
-                        <p class="help">{{ field.help_text|safe }}</p>
-                        {% endif %}
-                        {% else %}
-                        <div class="input-field inline">
-                            {{ field.errors }}
-                            {{ field.label_tag }} {{ field }}
-                            {% if field.help_text %}
-                            <p class="help">{{ field.help_text|safe }}</p>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        {% endfor %}
-                        <button class="btn-floating waves-effect waves-light" type="submit" name="action">
-                            <i class="material-icons">add</i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col s3 offset-s1 card-panel" style="padding:10px 5px;">
-            <div class="s12 center-align">
-                <h5>Dias da Semana</h5>
-            </div>
-            <form method="post">
-                {% csrf_token %}
-                {% for dia in weekdays %}
-                <h4>dia</h4>
-                {% endfor %}
-                <div class="col s12" style="padding:5px;">
-                    <label>
-                        <input type="checkbox" checked="checked" />
-                        <span>Segunda</span>
-                    </label>
-                </div>
-            </form>
-        </div>
+
+        
     </div>
 </main>
 
