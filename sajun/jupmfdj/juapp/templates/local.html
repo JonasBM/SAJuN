@@ -11,25 +11,51 @@
     <div class="col s12">
         <div class="row center">
             <h5>{{local.nome}}</h5>
-            <lu>
-                <li>dias_para_busca</li>
-                <li>TermoParaBusca</li>
-                <li>LISTA DE PAGINAS POR TERMO</li>
-            </lu>
+            
         </div>
 
-        
+        <div class="row">
+            {% for termo in termos %}
+
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title"><strong>{{termo.string}}</strong></span>
+                        <spam><strong>0</strong> novos positivos</small></spam>
+                        <blockquote>
+                            <ul>
+                                {% for pagina in termo.paginas.all %}
+                                <li>
+                                    <a href="{{pagina.diario.url}}">
+                                        {{pagina.diario.data}} - {{pagina.pagina}} ( {{pagina.quantidade}} )
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </blockquote>
+                    </div>
+                    <div class="card-action">
+                        <a role="button" class="btn btn-small waves-effect waves-light modal-trigger"
+                            data-id="{{termo.id}}" data-horario="{{termo.string}}" data-toggle="modal"
+                            data-target="modal_local_termo">
+                            Deletar
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </main>
 
-<div id="modal1" class="modal">
+<div id="modal_local_termo" class="modal">
     <div class="modal-content">
-        <h4 id="modal1_titulo">Remover</h4>
+        <h4 id="modal_local_termo_titulo">Remover</h4>
         <p>Tem certeza que deseja deletar este horário?</p>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Cancelar</a>
-        <a id="modal1_sim" href="#!" class="modal-action waves-effect waves-green btn-flat ">
+        <a id="modal_local_termo_sim" href="#!" class="modal-action waves-effect waves-green btn-flat ">
             Deletar
         </a>
     </div>
@@ -43,19 +69,14 @@
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.getElementById('modal1');
+        var elems = document.getElementById('modal_local_termo');
         var instance = M.Modal.init(elems, {
             onOpenStart: function (instance, trigger) {
-                document.getElementById('modal1_titulo').textContent = 'Remover ' + trigger.dataset.horario
-                document.getElementById('modal1_sim').href = '/delete_horario/' + trigger.dataset.id + '/'
+                document.getElementById('modal_local_termo_titulo').textContent = 'Remover ' + trigger.dataset.termo
+                document.getElementById('modal_local_termo_sim').href = '/delete_termo/' + trigger.dataset.id + '/'
             }
         });
     });
-
-
-
-
-
 </script>
 
 {% endblock %}

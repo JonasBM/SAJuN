@@ -25,11 +25,14 @@
                                     {% for termo in local.termos_para_busca.all %}
                                     <li>
                                         <strong>
-                                            "{{termo.string}}" ({{termo.quantidade_total}}
+                                            "{{termo.string}}" 
+                                            (
                                             {% if termo.quantidade_total > 1 %}
-                                            vezes
+                                            {{termo.quantidade_total}} vezes
+                                            {% elif termo.quantidade_total == 1 %}
+                                            {{termo.quantidade_total}} vez
                                             {% else %}
-                                            vez
+                                            Nenhuma vez
                                             {% endif %}
                                             )
                                         </strong>
@@ -37,6 +40,30 @@
                                     {% endfor %}
                                 </ul>
                             </blockquote>
+                        </div>
+                        <div class="card-action">
+                            <a role="button" class="btn btn-block" href="/local/{{local.id}}">
+                                Ver
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+
+
+            <div class="row">
+                {% for local in locais_sem_busca %}
+                <div class="col s12 m6 sl2">
+                    <div class="card">
+                        {% if local.logo %}
+                        <div class="card-image">
+                            <img src="{{local.logo}}">
+                        </div>
+                        {% endif %}
+                        <div class="card-content">
+                            <span class="card-title"><strong>{{local.nome}}</strong></span>
                         </div>
                         <div class="card-action">
                             <a role="button" class="btn btn-block" href="/local/{{local.id}}">

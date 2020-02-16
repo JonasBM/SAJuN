@@ -18,7 +18,7 @@ class LocalParaBusca(models.Model):
 
 class TermoParaBusca(models.Model):
     string = models.CharField(max_length=255)
-    proprietario = models.ForeignKey(User, related_name='termos_para_busca', on_delete=models.CASCADE, null=True)
+    proprietario = models.ForeignKey(User, related_name='termos_para_busca', on_delete=models.CASCADE)
 
     local_para_busca = models.ForeignKey(
         LocalParaBusca, related_name='termos_para_busca', on_delete=models.CASCADE)
@@ -26,9 +26,6 @@ class TermoParaBusca(models.Model):
     class Meta:
         ordering = ['local_para_busca', 'string']
         verbose_name_plural = "Termos para busca"
-        permissions = [
-            ("all", "Can change the status of tasks"),
-        ]
 
     def __str__(self):
         return str(self.local_para_busca) + ' - ' + self.string
