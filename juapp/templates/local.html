@@ -9,18 +9,37 @@
 
 <main class="container row">
     <div class="col s12">
-        <div class="row center">
-            <h5>{{local.nome}}</h5>
-            
+        <div class="navbar">
+            <nav>
+                <div class="nav-wrapper">
+                    <div href="#!" class="brand-logo left">
+                        {% if local.logo %}
+                        <img style="max-height:45px; vertical-align:middle;" class="responsive-img"
+                            src="{{local.logo}}">
+                        {% endif %}
+                        <span>{{local.nome}}</span>
+                    </div>
+                    <ul class="right">
+                        <li>
+                            <a class="waves-effect waves-light btn modal-trigger" data-toggle="modal"
+                                data-target="modal_add_termo">
+                                <i class="material-icons right">add</i>Adicionar termo
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </div>
-
+        <div class="row center">
+        </div>
         <div class="row">
             {% for termo in termos %}
 
-            <div class="col s12 m6">
+            <div class="col s12 m4">
                 <div class="card">
                     <div class="card-content">
-                        <span class="card-title"><strong>{{termo.string}}</strong></span>
+                        <span class="card-title"><strong>{{termo.string}}
+                                ({{ termo.desde|date:"d/m/y" }})</strong></span>
                         <spam><strong>0</strong> novos positivos</small></spam>
                         <blockquote>
                             <ul>
@@ -36,8 +55,8 @@
                     </div>
                     <div class="card-action">
                         <a role="button" class="btn btn-small waves-effect waves-light modal-trigger"
-                            data-id="{{termo.id}}" data-horario="{{termo.string}}" data-toggle="modal"
-                            data-target="modal_local_termo">
+                            data-id="{{termo.id}}" data-termo="{{termo.string}}" data-toggle="modal"
+                            data-target="modal_delete_termo">
                             Deletar
                         </a>
                     </div>
@@ -48,35 +67,108 @@
     </div>
 </main>
 
-<div id="modal_local_termo" class="modal">
+<div id="modal_delete_termo" class="modal">
     <div class="modal-content">
-        <h4 id="modal_local_termo_titulo">Remover</h4>
-        <p>Tem certeza que deseja deletar este horário?</p>
+        <h4 id="modal_delete_termo_titulo">Remover</h4>
+        <p>Tem certeza que deseja deletar este termo?</p>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Cancelar</a>
-        <a id="modal_local_termo_sim" href="#!" class="modal-action waves-effect waves-green btn-flat ">
+        <a id="modal_delete_termo_sim" href="#!" class="modal-action waves-effect waves-green btn-flat ">
             Deletar
         </a>
     </div>
 </div>
 
+<div id="modal_add_termo" class="modal">
+    <form method="post" >
+        {% csrf_token %}
+        <div class="modal-content">
+            <div class="row">
+                <h4 id="modal_delete_termo_titulo">Adicionar um termo para busca</h4>
+                <p>Adicione um termo e a data de inicio para que esta busca seja feita.</p>
+                <p>Este termo será encontrado em sua totalidade, com as palavras e caracteres em sua sequência
+                    apresentada.</p>
+                <p>A Busca será feita desconsiderando acentos e caixas de letras (maiúscula/minúscula).</p>
+                <p>Não é necessario a adição de aspas nos termos a serem buscados, caso adicione as aspas serão parte do
+                    termo a ser encontrado.</p>
+            </div>
+            <div class="row">
+                <div class="col s12">
+
+                    {% for hidden in termo_form.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    {% for field in termo_form.visible_fields %}
+                    <div class="fieldWrapper input-field col s6">
+                        {{ field.errors }}
+                        {{ field.label_tag }} {{ field }}
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</button>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat">Salvar</button>
+        </div>
+    </form>
+</div>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var elems = document.getElementById('id_horario');
-        var instances = M.Timepicker.init(elems, { twelveHour: false });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.getElementById('modal_local_termo');
-        var instance = M.Modal.init(elems, {
-            onOpenStart: function (instance, trigger) {
-                document.getElementById('modal_local_termo_titulo').textContent = 'Remover ' + trigger.dataset.termo
-                document.getElementById('modal_local_termo_sim').href = '/delete_termo/' + trigger.dataset.id + '/'
+        var instances = M.Timepicker.init(elems, {
+            twelveHour: false,
+            i18n: {
+                cancel: 'Cancelar',
+                clear: 'Limpar'
             }
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.getElementById('id_desde');
+        var instances = M.Datepicker.init(elems, {
+            defaultDate: new Date(),
+            setDefaultDate: true,
+            format: 'dd/mm/yyyy',
+            firstDay: 1,
+            container: 'body',
+            today: 'Hoje',
+            i18n: {
+                cancel: 'Cancelar',
+                clear: 'Limpar',
+                months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado'],
+                weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                weekdaysAbbrev: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
+            
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.getElementById('modal_delete_termo');
+        var instance = M.Modal.init(elems, {
+            onOpenStart: function (instance, trigger) {
+                document.getElementById('modal_delete_termo_titulo').textContent = 'Remover "' + trigger.dataset.termo + '"';
+                document.getElementById('modal_delete_termo_sim').href = '/delete_termo/' + trigger.dataset.id + '/';
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.getElementById('modal_add_termo');
+        var instance = M.Modal.init(elems);
+    });
+
 </script>
 
 {% endblock %}

@@ -1,21 +1,31 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-
 from juapp import forms
-from juapp.models import (Diario, LocalParaBusca, Pagina,
-                          TermoParaBusca)
+from juapp.forms import TermoParaBuscaForm
+from juapp.models import Diario, LocalParaBusca, Pagina, TermoParaBusca
+from django.db.models import Q
+
+import os
+
 
 
 @login_required
 def start(request):
-    locais = LocalParaBusca.objects.filter(termos_para_busca__in=TermoParaBusca.objects.filter(proprietario=request.user)).distinct()
+
+    if os.getenv('VIRTUAL_ENV'):
+        print('Using Virtualenv')
+    else:
+        print('Not using Virtualenv')
+
+    locais_com_busca = LocalParaBusca.objects.filter(termos_para_busca__in=TermoParaBusca.objects.filter(proprietario=request.user)).distinct()
     locais_sem_busca = LocalParaBusca.objects.exclude(termos_para_busca__in=TermoParaBusca.objects.filter(proprietario=request.user)).distinct()
     context = {
-        'locais': locais,
+        'locais_com_busca': locais_com_busca,
         'locais_sem_busca':locais_sem_busca,
     }
     return render(request, 'start.html', context=context)
+
 
 
 @login_required
@@ -25,10 +35,22 @@ def local(request, local_id):
     except LocalParaBusca.DoesNotExist:
         raise Http404('Local não existente')
 
+    data = {'local_para_busca': local, 'proprietario': request.user}
+    termo_form = TermoParaBuscaForm(request.POST or None, initial=data)
+    if termo_form.is_valid():
+        if not TermoParaBusca.objects.filter(
+            Q(proprietario=termo_form.data['proprietario']) & 
+            Q(local_para_busca=termo_form.data['local_para_busca']) & 
+            Q(string=termo_form.data['string']
+        )).exists():
+            termo_form.save()
+    termo_form = TermoParaBuscaForm(initial=data)
+
     termos = TermoParaBusca.objects.filter(proprietario=request.user).filter(local_para_busca=local)
     context={
         'local': local,
         'termos': termos,
+        'termo_form': termo_form,
     }
     return render(request, 'local.html', context=context)
 

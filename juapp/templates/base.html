@@ -1,51 +1,98 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
     {% load static %}
+    <link rel="stylesheet" href="{% static 'juapp/materialize/css/materialize.min.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'juapp/iconfont/material-icons.css' %}"> -->
     <link rel="stylesheet" href="{% static 'juapp/css/base.css' %}">
+
+    <style>
+        @font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(juapp/iconfont/MaterialIcons-Regular.eot);
+            /* For IE6-8 */
+            src: local('Material Icons'),
+            local('MaterialIcons-Regular'),
+            url({% static 'juapp/iconfont/MaterialIcons-Regular.woff2' %}) format('woff2'),
+            url({% static 'juapp/iconfont/MaterialIcons-Regular.woff' %}) format('woff'),
+            url({% static 'juapp/iconfont/MaterialIcons-Regular.ttf' %}) format('truetype');
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            /* Preferred icon size */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+
+            /* Support for all WebKit browsers. */
+            -webkit-font-smoothing: antialiased;
+            /* Support for Safari and Chrome. */
+            text-rendering: optimizeLegibility;
+
+            /* Support for Firefox. */
+            -moz-osx-font-smoothing: grayscale;
+
+            /* Support for IE. */
+            font-feature-settings: 'liga';
+        }
+    </style>
+
+
     {% block title %}<title>SAJuN</title>{% endblock %}
 </head>
+
 <body>
-<header class="no-padding">
-    <div class="navbar-fixed ">
-        <nav>
-            <div class="nav-wrapper">
-                <ul id="nav-mobile" class="left hide-on-med-and-down">
-                    <li><a href="{% url 'start' %}">Home</a></li>
-                    <li><a href="{% url 'start' %}">Teste</a></li>
-                </ul>
-                {% if user.is_authenticated %}
-                <a href="{% url 'start' %}" class="brand-logo center">
-                    <i class="material-icons">face</i>{{ user.get_username|title }}
-                </a>
-                <ul class="right">
-                    <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
-                </ul>
-                {% else %}
-                <a class="brand-logo">SAJuN - Sistema Automatico da Juliana Neurótica</a>
-                <ul class="right">
-                    <li><a href="{% url 'logout'%}?next={{request.path}}">Login</a></li>
-                </ul>
-                {% endif %}
-            </div>
-        </nav>
-    </div>
-</header>
-
-{% block content %}{% endblock %}
-
-<footer class="page-footer">
-    <div class="footer-copyright">
-        <div class="container">
-            ©2020 Kenchikuka
+    <header class="no-padding">
+        <div class="navbar-fixed ">
+            <nav>
+                <div class="nav-wrapper">
+                    <ul id="nav-mobile" class="left hide-on-med-and-down">
+                        <li><a href="{% url 'start' %}">Home</a></li>
+                    </ul>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'start' %}" class="brand-logo center">
+                        <i class="material-icons">face</i>{{ user.get_username|title }}
+                    </a>
+                    <ul class="right">
+                        <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+                    </ul>
+                    {% else %}
+                    <a class="brand-logo">SAJuN - Sistema Automatico da Juliana Neurótica</a>
+                    <ul class="right">
+                        <li><a href="{% url 'logout'%}?next={{request.path}}">Login</a></li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </nav>
         </div>
-    </div>
-</footer>
+    </header>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    {% block content %}{% endblock %}
+
+    <footer class="page-footer">
+        <div class="footer-copyright">
+            <div class="container">
+                ©2020 Kenchikuka
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'juapp/materialize/js/materialize.min.js' %}"></script>
 </body>
+
 </html>

@@ -18,8 +18,8 @@ class LocalParaBusca(models.Model):
 
 class TermoParaBusca(models.Model):
     string = models.CharField(max_length=255)
+    desde = models.DateField(default=datetime.now, blank=True)
     proprietario = models.ForeignKey(User, related_name='termos_para_busca', on_delete=models.CASCADE)
-
     local_para_busca = models.ForeignKey(
         LocalParaBusca, related_name='termos_para_busca', on_delete=models.CASCADE)
 

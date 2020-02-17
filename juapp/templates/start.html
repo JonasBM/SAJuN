@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+
+{% load tagfilters %}
 {% block content %}
 <main class="container row">
     <div class="col s12">
@@ -9,7 +11,7 @@
         </div>
         <div class="container">
             <div class="row">
-                {% for local in locais %}
+                {% for local in locais_com_busca %}
                 <div class="col s12 m6 sl2">
                     <div class="card">
                         {% if local.logo %}
@@ -22,10 +24,10 @@
                             <spam><strong>0</strong> novos positivos</small></spam>
                             <blockquote>
                                 <ul>
-                                    {% for termo in local.termos_para_busca.all %}
+                                    {% for termo in local.termos_para_busca.all|check_proprietario:user %}
                                     <li>
                                         <strong>
-                                            "{{termo.string}}" 
+                                            "{{termo.string}}"
                                             (
                                             {% if termo.quantidade_total > 1 %}
                                             {{termo.quantidade_total}} vezes
