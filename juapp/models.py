@@ -1,12 +1,14 @@
-from datetime import datetime
+from datetime import datetime, date
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
 
 
 class LocalParaBusca(models.Model):
-    nome = models.CharField(max_length=255)
+    nome = models.CharField(max_length=255, unique=True)
     logo = models.URLField(null=True, blank=True)
+    method = models.CharField(max_length=255, blank=True, unique=True)
 
     class Meta:
         ordering = ['nome']
@@ -18,7 +20,8 @@ class LocalParaBusca(models.Model):
 
 class TermoParaBusca(models.Model):
     string = models.CharField(max_length=255)
-    desde = models.DateField(default=datetime.now, blank=True)
+    desde = models.DateField(default=date.today, blank=True)
+    criado_em = models.DateTimeField(default=timezone.now)
     proprietario = models.ForeignKey(User, related_name='termos_para_busca', on_delete=models.CASCADE)
     local_para_busca = models.ForeignKey(
         LocalParaBusca, related_name='termos_para_busca', on_delete=models.CASCADE)
@@ -36,13 +39,11 @@ class TermoParaBusca(models.Model):
 
 
 class Diario(models.Model):
-    nome = models.CharField(max_length=255)
+    nome = models.CharField(max_length=255, unique=True)
     url = models.URLField()
-    data = models.DateField(default=datetime.now, blank=True)
-    baixado_em = models.DateTimeField(default=datetime.now, blank=True)
-    procurado_em = models.DateTimeField(default=datetime.now, blank=True)
-    termos_buscados = models.ManyToManyField(
-        TermoParaBusca, related_name='diarios')
+    data = models.DateField(default=date.today, blank=True)
+    baixado_em = models.DateTimeField(default=timezone.now, blank=True)
+    procurado_em = models.DateTimeField(default=timezone.now, blank=True)
     local_para_busca = models.ForeignKey(
         LocalParaBusca, related_name='diarios', on_delete=models.CASCADE)
 
@@ -56,6 +57,7 @@ class Diario(models.Model):
 class Pagina(models.Model):
     pagina = models.IntegerField()
     quantidade = models.IntegerField()
+    criado_em = models.DateTimeField(default=timezone.now, blank=True)
     diario = models.ForeignKey(
         Diario, related_name='paginas', on_delete=models.CASCADE)
     termo_buscado = models.ForeignKey(

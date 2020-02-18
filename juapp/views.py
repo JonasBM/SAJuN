@@ -1,13 +1,14 @@
+import os
+
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.db.models import Q
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+
+from diarioUpdater.diarioUpdater import update_diario
 from juapp import forms
 from juapp.forms import TermoParaBuscaForm
 from juapp.models import Diario, LocalParaBusca, Pagina, TermoParaBusca
-from django.db.models import Q
-
-import os
-
 
 
 @login_required
@@ -60,6 +61,11 @@ def delete_termo(request, termo_id):
     local_id = termo.local_para_busca.id
     termo.delete()
     return redirect('local', local_id)
+
+@login_required
+def force_update(request):
+    update_diario()
+    return HttpResponse('atualizado')
 
 
 @login_required

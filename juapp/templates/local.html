@@ -46,7 +46,7 @@
                                 {% for pagina in termo.paginas.all %}
                                 <li>
                                     <a href="{{pagina.diario.url}}">
-                                        {{pagina.diario.data}} - {{pagina.pagina}} ( {{pagina.quantidade}} )
+                                        {{pagina.diario.data}} - pg. {{pagina.pagina}} ( {{pagina.quantidade}} )
                                     </a>
                                 </li>
                                 {% endfor %}

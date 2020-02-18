@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "c:\\Users\\jonas\\Documents\\SAJuN\\env\\Scripts\\python.exe",
+    "python.pythonPath": "env\\Scripts\\python.exe",
     "python.linting.pylintEnabled": true,
     "python.linting.pylintArgs": [
         "--disable=C0111", // missing docstring
