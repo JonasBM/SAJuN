@@ -44,22 +44,26 @@ def _diarios_PMF():
     locais = LocalParaBusca.objects.filter(method='diarios_PMF')
     if locais.count() == 1:
         local = locais.first()
-        hoje = date.today()
-        primeira_data = local.termos_para_busca.order_by('desde').first().desde
-        data_pesquisa = date(primeira_data.year, primeira_data.month, 1)
-        while hoje >= data_pesquisa:
-            data = {'passo': 1, 'mes': data_pesquisa.month, 'ano':data_pesquisa.year, 'enviar':None}
-            data = parse.urlencode(data).encode()
-            req = request.Request(url_str, data=data)
-            with urllib.request.urlopen(req) as url:
-                html_page = url.read()
-            soup = BeautifulSoup(html_page, features="html.parser")
-            for link in soup.findAll('a', attrs={'href': re.compile("\.pdf$")}):
-                arquivo_pdf = link.get('href')
-                arquivo_pdf = arquivo_pdf.replace('../..', 'http://' + domain)
-                links.append(arquivo_pdf)
-            data_pesquisa = adiciona_mes(data_pesquisa)
-        return searchLinkPDF(local, links)
+        if local.termos_para_busca.all().first() is not None:
+            hoje = date.today()
+            primeira_data = local.termos_para_busca.order_by('desde').first().desde
+            data_pesquisa = date(primeira_data.year, primeira_data.month, 1)
+            while hoje >= data_pesquisa:
+                data = {'passo': 1, 'mes': data_pesquisa.month, 'ano':data_pesquisa.year, 'enviar':None}
+                data = parse.urlencode(data).encode()
+                req = request.Request(url_str, data=data)
+                with urllib.request.urlopen(req) as url:
+                    html_page = url.read()
+                soup = BeautifulSoup(html_page, features="html.parser")
+                for link in soup.findAll('a', attrs={'href': re.compile("\.pdf$")}):
+                    arquivo_pdf = link.get('href')
+                    arquivo_pdf = arquivo_pdf.replace('../..', 'http://' + domain)
+                    links.append(arquivo_pdf)
+                data_pesquisa = adiciona_mes(data_pesquisa)
+            return searchLinkPDF(local, links)
+        else:
+            logger.info('diarios_PMF: Nenhum termo para procurar')
+            print('nenhum termo para procurar')
     elif locais.count() > 1:
         logger.error('Multiplos locais: diarios_PMF |', locais)
     else:
@@ -98,10 +102,10 @@ def searchLinkPDF(local, links):
             if diario is not None:
                 if diario.procurado_em <= ultimo_criado:
                     if searchPDF(diario):
-                        diario.procurado_em=timezone.now()
-                        diario.save()
+                        print('Procurado:', local.method, diario.data)
                     else:
                         retorno = False
+
             else:
                 retorno = False
     return retorno
@@ -147,10 +151,13 @@ def searchPDF(diario):
             outputStream = open("output.pdf", "wb")
             writer.write(outputStream)
             outputStream.close()
+            diario.procurado_em=timezone.now()
+            diario.save()
     return True
 
 
 def update_diario():
+    print('inicio: update_diario')
     if _diarios_PMF():
         logger.info('diarios_PMF completado com sucesso')
     else:

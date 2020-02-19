@@ -8,7 +8,7 @@ from django.db.models import Sum
 class LocalParaBusca(models.Model):
     nome = models.CharField(max_length=255, unique=True)
     logo = models.URLField(null=True, blank=True)
-    method = models.CharField(max_length=255, blank=True, unique=True)
+    method = models.CharField(max_length=255, unique=True)
 
     class Meta:
         ordering = ['nome']
@@ -41,9 +41,9 @@ class TermoParaBusca(models.Model):
 class Diario(models.Model):
     nome = models.CharField(max_length=255, unique=True)
     url = models.URLField()
-    data = models.DateField(default=date.today, blank=True)
-    baixado_em = models.DateTimeField(default=timezone.now, blank=True)
-    procurado_em = models.DateTimeField(default=timezone.now, blank=True)
+    data = models.DateField(default=date.today)
+    baixado_em = models.DateTimeField(default=timezone.now)
+    procurado_em = models.DateTimeField(default=timezone.make_aware(datetime(1001, 1, 1)))
     local_para_busca = models.ForeignKey(
         LocalParaBusca, related_name='diarios', on_delete=models.CASCADE)
 
@@ -57,7 +57,7 @@ class Diario(models.Model):
 class Pagina(models.Model):
     pagina = models.IntegerField()
     quantidade = models.IntegerField()
-    criado_em = models.DateTimeField(default=timezone.now, blank=True)
+    criado_em = models.DateTimeField(default=timezone.now)
     diario = models.ForeignKey(
         Diario, related_name='paginas', on_delete=models.CASCADE)
     termo_buscado = models.ForeignKey(
